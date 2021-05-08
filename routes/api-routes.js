@@ -1,6 +1,8 @@
 var db = require("../models");
-//get the workout
+
+//GET THE WORKOUT
 module.exports = app => {
+  
     app.get("/api/workouts", (req, res) => {
         db.Workout.find({})
         .sort({ day: 1})
@@ -12,18 +14,43 @@ module.exports = app => {
         });
 });
 
-//This is supposed to add an exercise 
+//THIS IS SUPPOSED TO ADD AN EXERCISE
 app.put("/api/workouts/:id", (req, res) => {
-    console.log(req.params.id);
-    console.log(req.body);
-    console.log(req.body.duration);
     db.Workout.findByIdAndUpdate({
       _id: req.params.id
     }, {
       $push: { exercises: req.body },
       $inc: { totalDuration: req.body.duration }
+
     })
     .then(dbWorkout => {
-        console.log(dbWorkout);
         res.json(dbWorkout);
+      })
+      .catch(err => {
+        res.status(400).json(err)
+      });
+  });
+  
+//WORKOUT CREATION
+  app.post("/api/workouts", (req, res) => {
+    db.Workout.create(req.body)
+      .then(dbWorkout => {
+        res.json(dbWorkout);
+      })
+      .catch(err => {
+        res.status(400).json(err);
+      });
+  });
+
+  //WORKOUT GET IN RAGE
+  app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({})
+      .then(dbWorkout => {
+        res.json(dbWorkout)
+      })
+      .catch(err => {
+        res.status(400).json(err)
+      });
+  });
+}
 //I cant figure out what the error is on this page right now and its honestly kind of driving me mad. Please Clean up (- Past Self)
