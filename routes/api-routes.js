@@ -8,3 +8,5 @@ module.exports = app => {
         res.json(dbWorkout);
     })
 });
+
+//I cant figure out what the error is on this page right now and its honestly kind of driving me mad. Please Clean up (- Past Self)
